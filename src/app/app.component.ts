@@ -9,7 +9,7 @@ import { Space } from './space.model';
 export class AppComponent implements OnInit {
   colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
   board = [];
-  difficultySettings = [
+  difficulties = [
     {
       name: 'beginner',
       x: 8,
@@ -29,30 +29,26 @@ export class AppComponent implements OnInit {
       bombs: 99
     }
   ]
-  difficultyRating: number;
-  currentDifficulty;
+  difficulty: number = 0;
   initialClick: boolean = true;
   didYouWin;
   ngOnInit(){
-    this.genBoard(0);
+    this.genBoard();
   }
 
   onChange(optionFromMenu) {
-    this.didYouWin = ''
-    this.genBoard(parseInt(optionFromMenu,10));
+    this.didYouWin = '';
+    this.difficulty = parseInt(optionFromMenu,10);
+    this.genBoard();
     this.initialClick = true;
   }
 
-  genBoard(difficulty: number) {
+  genBoard() {
     this.board.length = 0;
-    this.difficultyRating = difficulty;
-    this.currentDifficulty = this.difficultySettings[this.difficultyRating];
-    for(let x = 0; x < this.currentDifficulty.x; x++){
+    let difficulty = this.difficulties[this.difficulty];
+    for(let x = 0; x < difficulty.x; x++){
       this.board.push([]);
-    }
-
-    for(let x = 0; x < this.currentDifficulty.x; x++){
-      for(let y = 0; y < this.currentDifficulty.y; y++){
+      for(let y = 0; y < difficulty.y; y++){
         this.board[x].push(new Space(x,y));
       }
     }
@@ -60,9 +56,9 @@ export class AppComponent implements OnInit {
   }
 
   genBombs(){
-    let bombCount = this.currentDifficulty.bombs
-    let xMax = this.currentDifficulty.x;
-    let yMax = this.currentDifficulty.y;
+    let bombCount = this.difficulties[this.difficulty].bombs
+    let xMax = this.difficulties[this.difficulty].x;
+    let yMax = this.difficulties[this.difficulty].y;
     for(let bombs = 0; bombs < bombCount; bombs++){
       let x:number, y:number;
       do {
@@ -118,7 +114,7 @@ export class AppComponent implements OnInit {
     // this.initialize(space);
     if(this.initialClick) {
       do {
-        this.genBoard(this.difficultyRating);
+        this.genBoard();
         this.genBombs();
       } while(this.board[space.x][space.y].bombCount !== 0 || this.board[space.x][space.y].isBomb)
       this.initialClick = false;
@@ -155,7 +151,7 @@ export class AppComponent implements OnInit {
       }
     }
 
-    if(totalClicked === ((this.currentDifficulty.x * this.currentDifficulty.y) - this.currentDifficulty.bombs)){
+    if(totalClicked === ((this.difficulties[this.difficulty].x * this.difficulties[this.difficulty].y) - this.difficulties[this.difficulty].bombs)){
       this.didYouWin = 'Victory is yours!'
     }
   }
