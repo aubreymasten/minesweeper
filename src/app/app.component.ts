@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
         this.board.array[x].push(new Space(x,y));
       }
     }
-    this.board.genL();
+    this.board.initialize();
   }
 
   genBombs(){

@@ -3,15 +3,18 @@
 export class Board {
   x: number;
   y: number;
+  flags: number;
   bombs = [];
   array = [];
+
   revealed: number = 0;
   isNew: boolean = true;
   constructor(public difficulty){}
 
-  genL(){
+  initialize(){
     this.x = this.array.length;
     this.y = this.array[0].length;
+    this.flags = this.difficulty.bombs;
   }
 
   bombCount(x: number, y:number) {
@@ -44,6 +47,12 @@ export class Board {
   }
 
   toggleFlag(x: number, y: number) {
-    if(!this.isRevealed(x, y)) this.array[x][y].status = this.array[x][y].status === 'flagged' ? 'hidden' : 'flagged';
+    if(this.array[x][y].status === 'flagged'){
+      this.array[x][y].status = 'hidden';
+      this.flags += 1;
+    } else if(this.array[x][y].status === 'hidden' && this.flags > 0){
+      this.array[x][y].status = 'flagged';
+      this.flags -= 1;
+    }
   }
 }
