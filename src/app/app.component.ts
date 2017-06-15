@@ -8,9 +8,6 @@ import { Board } from './board.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
-  board: Board;
-  bombs =[];
   difficulties = [
     {
       name: 'beginner',
@@ -30,10 +27,12 @@ export class AppComponent implements OnInit {
       y: 16,
       bombs: 99
     }
-  ]
+  ];
+
+  board: Board;
   difficulty: number = 0;
-  initialClick: boolean = true;
   didYouWin;
+
   ngOnInit(){
     this.genBoard();
   }
@@ -42,36 +41,24 @@ export class AppComponent implements OnInit {
     this.didYouWin = '';
     this.difficulty = parseInt(optionFromMenu,10);
     this.genBoard();
-    this.initialClick = true;
   }
 
   genBoard() {
-    if(!this.board){
-      this.board = new Board(this.difficulties[this.difficulty])
-    } else {
-      this.board.difficulty = this.difficulties[this.difficulty];
-      this.board.array.length = 0;
-    }
-    // this.board.difficulty = this.difficulties[this.difficulty];
+    this.board = new Board(this.difficulties[this.difficulty]);
     for(let x = 0; x < this.board.difficulty.x; x++){
       this.board.array.push([]);
       for(let y = 0; y < this.board.difficulty.y; y++){
         this.board.array[x].push(new Space(x,y));
       }
     }
-    this.logBoard();
   }
 
   genBombs(){
-    let bombCount = this.board.difficulty.bombs
-    let xMax = this.board.difficulty.x;
-    let yMax = this.board.difficulty.y;
-    this.board.bombs.length = 0;
-    for(let bombs = 0; bombs < bombCount; bombs++){
+    for(let bombs = 0; bombs < this.board.difficulty.bombs; bombs++){
       let x:number, y:number;
       do {
-        x = Math.floor(Math.random() * xMax);
-        y = Math.floor(Math.random() * yMax);
+        x = Math.floor(Math.random() * this.board.difficulty.x);
+        y = Math.floor(Math.random() * this.board.difficulty.y);
       } while(this.board.array[x][y].isBomb);
       this.board.array[x][y].isBomb = true;
       this.board.bombs.push([x,y]);
@@ -116,12 +103,12 @@ export class AppComponent implements OnInit {
   }
 
   updateBoard(space: Space){
-    if(this.initialClick) {
+    if(this.board.isNew) {
       do {
         this.genBoard();
         this.genBombs();
       } while(this.board.array[space.x][space.y].bombCount !== 0 || this.board.array[space.x][space.y].isBomb)
-      this.initialClick = false;
+      this.board.isNew = false;
     }
     if(this.board.array[space.x][space.y].clickedStatus !== 'flagged'){
       if(space.isBomb){
@@ -176,10 +163,6 @@ export class AppComponent implements OnInit {
         this.reveal(x+1,y+1);
       }
     }
-  }
-
-  getColor(index: string){
-    return this.colors[parseInt(index,10)];
   }
 
   flagThat(space: Space) {
