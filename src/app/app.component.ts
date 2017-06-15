@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
 
   setBombs(){
     this.board.bombs.forEach((bomb)=>{
-      this.board.array[bomb[0]][bomb[1]].bombCount = 9;
+      this.board.setBombs(bomb[0], bomb[1], 9);
     });
   }
 
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
     this.board.bombs.forEach((bomb)=>{
       for(let i = bomb[0]-1; i < bomb[0]+2; i++){
         for(let n = bomb[1]-1; n < bomb[1]+2; n++){
-          if(this.isValid(i, n)) this.board.array[i][n].bombCount += 1;
+          if(this.isValid(i, n)) this.board.addBomb(i,n);
         }
       }
     });
@@ -107,7 +107,7 @@ export class AppComponent implements OnInit {
       do {
         this.genBoard();
         this.genBombs();
-      } while(this.board.array[space.x][space.y].bombCount !== 0 || this.board.array[space.x][space.y].isBomb)
+      } while(this.board.bombCount(space.x, space.y) !== 0 || this.board.array[space.x][space.y].isBomb)
       this.board.isNew = false;
     }
     if(this.board.array[space.x][space.y].clickedStatus !== 'flagged'){
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit {
     if(x >= 0 && x < this.board.array.length && y >= 0 && y < this.board.array[0].length && !this.board.array[x][y].isClicked && !this.board.array[x][y].isBomb && this.board.array[x][y].clickedStatus !== 'flagged'){
       this.board.array[x][y].isClicked = true;
       this.board.array[x][y].clickedStatus = 'revealed';
-      if(this.board.array[x][y].bombCount === 0){
+      if(this.board.bombCount(x,y) === 0){
         this.reveal(x-1,y-1);
         this.reveal(x-1,y);
         this.reveal(x-1,y+1);
