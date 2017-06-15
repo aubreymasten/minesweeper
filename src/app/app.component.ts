@@ -9,6 +9,7 @@ import { Space } from './space.model';
 export class AppComponent implements OnInit {
   colors: string[] = ['red','orange','green','blue','pink','salmon','darkgray','black'];
   board = [];
+  bombs = [];
   difficulties = [
     {
       name: 'beginner',
@@ -59,6 +60,7 @@ export class AppComponent implements OnInit {
     let bombCount = this.difficulties[this.difficulty].bombs
     let xMax = this.difficulties[this.difficulty].x;
     let yMax = this.difficulties[this.difficulty].y;
+    this.bombs.length = 0;
     for(let bombs = 0; bombs < bombCount; bombs++){
       let x:number, y:number;
       do {
@@ -66,33 +68,30 @@ export class AppComponent implements OnInit {
         y = Math.floor(Math.random() * yMax);
       } while(this.board[x][y].isBomb);
       this.board[x][y].isBomb = true;
+      this.bombs.push([x,y]);
     }
-
-    // this.logBoard();
     this.countBombs();
+    this.setBombs();
   }
 
-  countBombs() {
-    for(let x = 0; x < this.board.length; x++){
-      for(let y = 0; y < this.board[0].length; y++){
-        if(!this.board[x][y].isBomb){
+  setBombs(){
+    this.bombs.forEach((bomb)=>{
+      this.board[bomb[0]][bomb[1]].bombCount = 9;
+    });
+  }
 
-          if(x-1 >= 0 && y-1 >= 0 && this.board[x-1][y-1].isBomb) this.board[x][y].bombCount += 1;
-          if(x-1 >= 0 && this.board[x-1][y].isBomb) this.board[x][y].bombCount += 1;
-          if(x-1 >= 0 && y+1 < this.board[0].length && this.board[x-1][y+1].isBomb) this.board[x][y].bombCount += 1;
-
-          if(y-1 >= 0 && this.board[x][y-1].isBomb) this.board[x][y].bombCount += 1;
-          if(y+1 < this.board[0].length && this.board[x][y+1].isBomb) this.board[x][y].bombCount += 1;
-
-          if(x+1 < this.board.length && y-1 >= 0 && this.board[x+1][y-1].isBomb) this.board[x][y].bombCount += 1;
-          if(x+1 < this.board.length && this.board[x+1][y].isBomb) this.board[x][y].bombCount += 1;
-          if(x+1 < this.board.length && y+1 < this.board[0].length && this.board[x+1][y+1].isBomb) this.board[x][y].bombCount += 1;
-        } else {
-          this.board[x][y].bombCount = 9;
+  countBombs(){
+    this.bombs.forEach((bomb)=>{
+      for(let i = bomb[0]-1; i < bomb[0]+2; i++){
+        for(let n = bomb[1]-1; n < bomb[1]+2; n++){
+          if(this.isValid(i, n)) this.board[i][n].bombCount += 1;
         }
       }
-    }
-    this.logBoard();
+    });
+  }
+
+  isValid(x:number, y:number){
+    return x >= 0 && x < this.board.length && y >= 0 && y < this.board[0].length;
   }
 
   logBoard(){
@@ -105,13 +104,12 @@ export class AppComponent implements OnInit {
           line = line.concat(`${this.board[x][y].bombCount}  `);
         }
       }
+      // console.log(`${x}: ${line}`);
       line = '';
     }
   }
 
-
   updateBoard(space: Space){
-    // this.initialize(space);
     if(this.initialClick) {
       do {
         this.genBoard();
@@ -121,7 +119,6 @@ export class AppComponent implements OnInit {
     }
     if(this.board[space.x][space.y].clickedStatus !== 'flagged'){
       if(space.isBomb){
-        console.log("KABLOOOM, game over")
         this.gameOver();
       } else{
         this.reveal(space.x,space.y)
