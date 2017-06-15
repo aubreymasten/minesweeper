@@ -12,6 +12,27 @@
   </div>
 </div>
 <h1>{{didYouWin}}</h1>
-<div *ngIf="scores.length > 0">
-  <p *ngFor="let score of scores; index as i">{{i}}:{{score}}</p>
+<div *ngIf="scoreSave">
+  <p>save score</p>
+  <label>name:</label>
+  <input #name type="text">
+  <label>score:</label>
+  <span>{{board.score}}</span>
+  <button (click)="saveScore(name.value)" type="button">save</button>
 </div>
+<table *ngIf="scores.length > 0">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let score of scores; index as i">
+      <td>{{i+1}}</td>
+      <td>{{score.name}}</td>
+      <td>{{score.score}}</td>
+    </tr>
+  </tbody>
+</table>

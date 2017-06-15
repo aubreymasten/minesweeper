@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   difficulty: number = 0;
   didYouWin;
   scores = [];
+  scoreSave: boolean = false;
 
   ngOnInit(){
     this.genBoard();
@@ -127,8 +128,14 @@ export class AppComponent implements OnInit {
     if(this.board.hasWon()){
       this.board.stopGame();
       this.didYouWin = 'Victory is yours!';
-      this.scores.push(this.board.score);
+      // this.scores.push(this.board.score);
+      this.scoreSave = true;
     }
+  }
+
+  saveScore(name: string){
+    this.scores.push({name: name, score: this.board.score});
+    this.scoreSave = false;
   }
 
   reveal(x: number, y: number){
