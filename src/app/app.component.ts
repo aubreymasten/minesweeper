@@ -10,19 +10,19 @@ import { Board } from './board.model';
 export class AppComponent implements OnInit {
   difficulties = [
     {
-      name: 'beginner',
+      name: 'Easy',
       x: 8,
       y: 8,
       bombs: 10
     },
     {
-      name: 'intermediate',
+      name: 'Intermediate',
       x: 16,
       y: 16,
       bombs: 40
     },
     {
-      name: 'expert',
+      name: 'Extreme Sunburn',
       x: 32,
       y: 16,
       bombs: 99
@@ -130,7 +130,7 @@ export class AppComponent implements OnInit {
     }
     this.didYouWin = 'GAME OVER'
   }
-
+  // TODO: check this out
   victory(){
     let totalClicked = 0;
     for(let x = 0; x < this.board.array.length; x++){
@@ -150,6 +150,7 @@ export class AppComponent implements OnInit {
     if(x >= 0 && x < this.board.array.length && y >= 0 && y < this.board.array[0].length && !this.board.array[x][y].isClicked && !this.board.array[x][y].isBomb && this.board.array[x][y].clickedStatus !== 'flagged'){
       this.board.array[x][y].isClicked = true;
       this.board.array[x][y].clickedStatus = 'revealed';
+      // TODO: add loop to reveal
       if(this.board.bombCount(x,y) === 0){
         this.reveal(x-1,y-1);
         this.reveal(x-1,y);
@@ -165,6 +166,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+// TODO: make this better
   flagThat(space: Space) {
     if(this.board.array[space.x][space.y].clickedStatus === 'flagged'){
       this.board.array[space.x][space.y].clickedStatus = 'hidden';

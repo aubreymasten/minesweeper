@@ -1,10 +1,9 @@
 <h1>Minesweeper</h1>
 <select #difficulty (change)="onChange($event.target.value)">
-  <option selected="selected" value="0">Easy</option>
-  <option value="1">Intermediate</option>
-  <option value="2">Extreme Sunburn</option>
+  <option *ngFor="let difficulty of difficulties; index as i" value="{{i}}">{{difficulty.name}}</option>
 </select>
 <button (click)="onChange(difficulty.value)">reset</button>
+
 <div *ngFor="let row of board.array" class="row">
   <div (contextmenu)="flagThat(space)" (click)="updateBoard(space)" *ngFor="let space of row" [class]="space.clickedStatus">
     <span *ngIf="space.isClicked" class="bomb-count c{{space.bombCount}}" >{{space.bombCount}}</span>
