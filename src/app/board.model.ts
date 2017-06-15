@@ -26,6 +26,10 @@ export class Board {
     this.array[x][y].bombCount = bombs;
   }
 
+  isBomb(x: number, y: number) {
+    return this.array[x][y].isBomb;
+  }
+
   hasWon(){
     return this.revealed === (this.array.length * this.array[0].length) - this.bombs.length;
   }

@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
       do {
         x = Math.floor(Math.random() * this.board.difficulty.x);
         y = Math.floor(Math.random() * this.board.difficulty.y);
-      } while(this.board.array[x][y].isBomb);
+      } while(this.board.isBomb(x, y));
       this.board.array[x][y].isBomb = true;
       this.board.bombs.push([x,y]);
     }
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
     let line = '';
     for(let x = 0; x < this.board.x; x++){
       for(let y = 0; y < this.board.y; y++){
-        if(this.board.array[x][y].isBomb){
+        if(this.board.isBomb(x,y)){
           line = line.concat('B  ');
         } else {
           line = line.concat(`${this.board.array[x][y].bombCount}  `);
@@ -107,7 +107,7 @@ export class AppComponent implements OnInit {
       do {
         this.genBoard();
         this.genBombs();
-      } while(this.board.bombCount(space.x, space.y) !== 0 || this.board.array[space.x][space.y].isBomb)
+      } while(this.board.bombCount(space.x, space.y) !== 0 || this.board.isBomb(space.x, space.y))
       this.board.isNew = false;
   }
 
@@ -145,8 +145,8 @@ export class AppComponent implements OnInit {
       && x < this.board.x //in x max bounds
       && y >= 0 // in y min bounds
       && y < this.board.y // in y max bounds
-      && !this.board.isRevealed(x,y)
-      && !this.board.array[x][y].isBomb // not a bomb
+      && !this.board.isRevealed(x, y)
+      && !this.board.isBomb(x, y) // not a bomb
       && this.board.array[x][y].status !== 'flagged' // not flagged
     ){
       this.board.reveal(x,y);
