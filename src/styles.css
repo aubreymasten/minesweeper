@@ -1,7 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 body {
+
   text-align: center;
-  background-color: lightgray;
+  background-color: rgb(193,193,193);
+  color: #333;
+}
+
+h1 {
+  text-transform: uppercase;
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+table {
+  margin: auto;
+  width: 415px;
+  border: 2px solid;
+}
+
+thead {
+  border-bottom: 5px solid #333;
+  text-transform: uppercase;
 }
 
 .row {

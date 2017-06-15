@@ -1,42 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { Space } from './space.model';
 import { Board } from './board.model';
+import { Score } from './score.model';
+import { ScoreService } from './score.service';
+import { FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [ScoreService]
 })
 
 export class AppComponent implements OnInit {
+
+  constructor(private scoreService: ScoreService){}
   difficulties = [
     {
       name: 'Easy',
       x: 8,
       y: 8,
-      bombs: 10
+      bombs: 10,
+      level: "0"
     },
     {
       name: 'Intermediate',
       x: 16,
       y: 16,
-      bombs: 40
+      bombs: 40,
+      level: "1"
     },
     {
       name: 'Extreme Sunburn',
       x: 32,
       y: 16,
-      bombs: 99
+      bombs: 99,
+      level: "2"
     }
   ];
 
   board: Board;
   difficulty: number = 0;
   didYouWin;
-  scores = [];
+  scores: FirebaseListObservable<any[]>;
   scoreSave: boolean = false;
 
   ngOnInit(){
+    this.scores = this.scoreService.getScores();
     this.genBoard();
   }
 
@@ -128,13 +138,13 @@ export class AppComponent implements OnInit {
     if(this.board.hasWon()){
       this.board.stopGame();
       this.didYouWin = 'Victory is yours!';
-      // this.scores.push(this.board.score);
       this.scoreSave = true;
     }
   }
 
   saveScore(name: string){
-    this.scores.push({name: name, score: this.board.score});
+    let newScore: Score = new Score(name, this.board.score, this.board.difficulty.level);
+    this.scoreService.saveScore(newScore);
     this.scoreSave = false;
   }
 
