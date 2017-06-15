@@ -102,20 +102,21 @@ export class AppComponent implements OnInit {
     }
   }
 
-  updateBoard(space: Space){
-    if(this.board.isNew) {
+  newBoard(space: Space){
       do {
         this.genBoard();
         this.genBombs();
       } while(this.board.bombCount(space.x, space.y) !== 0 || this.board.array[space.x][space.y].isBomb)
       this.board.isNew = false;
-    }
-    if(this.board.array[space.x][space.y].clickedStatus !== 'flagged'){
+  }
+
+  updateBoard(space: Space){
+    if(this.board.isNew) this.newBoard(space);
+    if(this.board.array[space.x][space.y].status !== 'flagged'){
       if(space.isBomb){
         this.gameOver();
-      } else{
+      } else {
         this.reveal(space.x,space.y)
-        space.isClicked = true;
         this.victory();
       }
     }
@@ -124,20 +125,18 @@ export class AppComponent implements OnInit {
   gameOver(){
     for(let x = 0; x < this.board.array.length; x++){
       for(let y = 0; y < this.board.array[0].length; y++){
-        this.board.array[x][y].isClicked = true;
-        this.board.array[x][y].clickedStatus = 'revealed';
+        this.board.reveal(x,y);
       }
     }
     this.didYouWin = 'GAME OVER'
   }
+
   // TODO: check this out
   victory(){
     let totalClicked = 0;
     for(let x = 0; x < this.board.array.length; x++){
       for(let y = 0; y < this.board.array[0].length; y++){
-        if(this.board.array[x][y].isClicked === true){
-          totalClicked += 1;
-        }
+        if(this.board.isRevealed(x,y)) totalClicked += 1;
       }
     }
 
@@ -147,9 +146,15 @@ export class AppComponent implements OnInit {
   }
 
   reveal(x: number, y: number){
-    if(x >= 0 && x < this.board.array.length && y >= 0 && y < this.board.array[0].length && !this.board.array[x][y].isClicked && !this.board.array[x][y].isBomb && this.board.array[x][y].clickedStatus !== 'flagged'){
-      this.board.array[x][y].isClicked = true;
-      this.board.array[x][y].clickedStatus = 'revealed';
+    if(x >= 0 //in x min bounds
+      && x < this.board.array.length //in x max bounds
+      && y >= 0 // in y min bounds
+      && y < this.board.array[0].length // in y max bounds
+      && !this.board.isRevealed(x,y)
+      && !this.board.array[x][y].isBomb // not a bomb
+      && this.board.array[x][y].status !== 'flagged' // not flagged
+    ){
+      this.board.reveal(x,y);
       // TODO: add loop to reveal
       if(this.board.bombCount(x,y) === 0){
         this.reveal(x-1,y-1);
@@ -168,11 +173,11 @@ export class AppComponent implements OnInit {
 
 // TODO: make this better
   flagThat(space: Space) {
-    if(this.board.array[space.x][space.y].clickedStatus === 'flagged'){
-      this.board.array[space.x][space.y].clickedStatus = 'hidden';
+    if(this.board.array[space.x][space.y].status === 'flagged'){
+      this.board.array[space.x][space.y].status = 'hidden';
     }
-    else if(this.board.array[space.x][space.y].clickedStatus === 'hidden'){
-      this.board.array[space.x][space.y].clickedStatus = 'flagged';
+    else if(this.board.array[space.x][space.y].status === 'hidden'){
+      this.board.array[space.x][space.y].status = 'flagged';
     }
   }
 }

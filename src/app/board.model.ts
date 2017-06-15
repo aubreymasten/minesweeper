@@ -17,4 +17,12 @@ export class Board {
   setBombs(x: number, y: number, bombs: number) {
     this.array[x][y].bombCount = bombs;
   }
+
+  reveal(x: number, y: number) {
+    this.array[x][y].status = 'revealed';
+  }
+
+  isRevealed(x: number, y: number) {
+    return this.array[x][y].status === 'revealed';
+  }
 }
