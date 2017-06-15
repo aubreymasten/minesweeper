@@ -141,27 +141,20 @@ export class AppComponent implements OnInit {
   }
 
   reveal(x: number, y: number){
-    if(x >= 0 //in x min bounds
-      && x < this.board.x //in x max bounds
-      && y >= 0 // in y min bounds
-      && y < this.board.y // in y max bounds
+    if(
+      this.isValid(x, y)
       && !this.board.isRevealed(x, y)
       && !this.board.isBomb(x, y) // not a bomb
       && this.board.array[x][y].status !== 'flagged' // not flagged
     ){
       this.board.reveal(x,y);
-      // TODO: add loop to reveal
+
       if(this.board.bombCount(x,y) === 0){
-        this.reveal(x-1,y-1);
-        this.reveal(x-1,y);
-        this.reveal(x-1,y+1);
-
-        this.reveal(x,y-1);
-        this.reveal(x,y+1);
-
-        this.reveal(x+1,y-1);
-        this.reveal(x+1,y);
-        this.reveal(x+1,y+1);
+        for(let i = x-1; i < x+2; i++){
+          for(let n = y-1; n < y+2; n++){
+            this.reveal(i, n);
+          }
+        }
       }
     }
   }
