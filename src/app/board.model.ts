@@ -6,6 +6,8 @@ export class Board {
   flags: number;
   bombs = [];
   array = [];
+  score: number = 0;
+  counter;
 
   revealed: number = 0;
   isNew: boolean = true;
@@ -15,6 +17,18 @@ export class Board {
     this.x = this.array.length;
     this.y = this.array[0].length;
     this.flags = this.difficulty.bombs;
+  }
+
+  startGame(){
+    this.counter = window.setInterval(function(scope){scope.scoreAdd()}, 1000, this);
+  }
+
+  stopGame(){
+    window.clearInterval(this.counter);
+  }
+
+  scoreAdd(){
+    this.score += 1;
   }
 
   bombCount(x: number, y:number) {

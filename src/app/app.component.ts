@@ -7,6 +7,7 @@ import { Board } from './board.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
   difficulties = [
     {
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
   board: Board;
   difficulty: number = 0;
   didYouWin;
+  scores = [];
 
   ngOnInit(){
     this.genBoard();
@@ -94,6 +96,7 @@ export class AppComponent implements OnInit {
         this.genBombs();
       } while(this.board.bombCount(space.x, space.y) !== 0 || this.board.isBomb(space.x, space.y))
       this.board.isNew = false;
+      this.board.startGame();
   }
 
   updateBoard(space: Space, event){
@@ -111,6 +114,7 @@ export class AppComponent implements OnInit {
   }
 
   gameOver(){
+    this.board.stopGame();
     for(let x = 0; x < this.board.x; x++){
       for(let y = 0; y < this.board.y; y++){
         this.board.reveal(x,y);
@@ -121,7 +125,9 @@ export class AppComponent implements OnInit {
 
   victory(){
     if(this.board.hasWon()){
-      this.didYouWin = 'Victory is yours!'
+      this.board.stopGame();
+      this.didYouWin = 'Victory is yours!';
+      this.scores.push(this.board.score);
     }
   }
 

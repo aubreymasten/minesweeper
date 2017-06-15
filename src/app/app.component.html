@@ -1,5 +1,6 @@
 <h1>Minesweeper</h1>
 <span>{{this.board.flags}}</span>
+<span>{{this.board.score}}</span>
 <select #difficulty (change)="onChange($event.target.value)">
   <option *ngFor="let difficulty of difficulties; index as i" value="{{i}}">{{difficulty.name}}</option>
 </select>
@@ -11,3 +12,6 @@
   </div>
 </div>
 <h1>{{didYouWin}}</h1>
+<div *ngIf="scores.length > 0">
+  <p *ngFor="let score of scores; index as i">{{i}}:{{score}}</p>
+</div>
