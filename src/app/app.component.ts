@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
         this.board.array[x].push(new Space(x,y));
       }
     }
+    this.board.genL();
   }
 
   genBombs(){
@@ -84,13 +85,13 @@ export class AppComponent implements OnInit {
   }
 
   isValid(x:number, y:number){
-    return x >= 0 && x < this.board.array.length && y >= 0 && y < this.board.array[0].length;
+    return x >= 0 && x < this.board.x && y >= 0 && y < this.board.y;
   }
 
   logBoard(){
     let line = '';
-    for(let x = 0; x < this.board.array.length; x++){
-      for(let y = 0; y < this.board.array[0].length; y++){
+    for(let x = 0; x < this.board.x; x++){
+      for(let y = 0; y < this.board.y; y++){
         if(this.board.array[x][y].isBomb){
           line = line.concat('B  ');
         } else {
@@ -125,8 +126,8 @@ export class AppComponent implements OnInit {
   }
 
   gameOver(){
-    for(let x = 0; x < this.board.array.length; x++){
-      for(let y = 0; y < this.board.array[0].length; y++){
+    for(let x = 0; x < this.board.x; x++){
+      for(let y = 0; y < this.board.y; y++){
         this.board.reveal(x,y);
       }
     }
@@ -141,9 +142,9 @@ export class AppComponent implements OnInit {
 
   reveal(x: number, y: number){
     if(x >= 0 //in x min bounds
-      && x < this.board.array.length //in x max bounds
+      && x < this.board.x //in x max bounds
       && y >= 0 // in y min bounds
-      && y < this.board.array[0].length // in y max bounds
+      && y < this.board.y // in y max bounds
       && !this.board.isRevealed(x,y)
       && !this.board.array[x][y].isBomb // not a bomb
       && this.board.array[x][y].status !== 'flagged' // not flagged
@@ -165,7 +166,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-// TODO: make this better
   flag(space: Space) {
     if(!this.board.isNew) this.board.toggleFlag(space.x, space.y);
   }

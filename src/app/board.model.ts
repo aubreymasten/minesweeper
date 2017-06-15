@@ -1,11 +1,18 @@
 
 
 export class Board {
+  x: number;
+  y: number;
   bombs = [];
   array = [];
   revealed: number = 0;
   isNew: boolean = true;
   constructor(public difficulty){}
+
+  genL(){
+    this.x = this.array.length;
+    this.y = this.array[0].length;
+  }
 
   bombCount(x: number, y:number) {
     return this.array[x][y].bombCount;
