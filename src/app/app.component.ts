@@ -88,21 +88,6 @@ export class AppComponent implements OnInit {
     return x >= 0 && x < this.board.x && y >= 0 && y < this.board.y;
   }
 
-  logBoard(){
-    let line = '';
-    for(let x = 0; x < this.board.x; x++){
-      for(let y = 0; y < this.board.y; y++){
-        if(this.board.isBomb(x,y)){
-          line = line.concat('B  ');
-        } else {
-          line = line.concat(`${this.board.array[x][y].bombCount}  `);
-        }
-      }
-      // console.log(`${x}: ${line}`);
-      line = '';
-    }
-  }
-
   newBoard(space: Space){
       do {
         this.genBoard();
