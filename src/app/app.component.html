@@ -5,7 +5,7 @@
 <button (click)="onChange(difficulty.value)">reset</button>
 
 <div *ngFor="let row of board.array" class="row">
-  <div (contextmenu)="flagThat(space)" (click)="updateBoard(space)" *ngFor="let space of row" [class]="space.status">
+  <div (contextmenu)="flag(space)" (click)="updateBoard(space, $event)" *ngFor="let space of row" [class]="space.status">
     <span *ngIf="space.status === 'revealed'" class="bomb-count c{{space.bombCount}}" >{{space.bombCount}}</span>
   </div>
 </div>

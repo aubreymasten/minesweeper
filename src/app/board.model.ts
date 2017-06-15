@@ -3,6 +3,7 @@
 export class Board {
   bombs = [];
   array = [];
+  revealed: number = 0;
   isNew: boolean = true;
   constructor(public difficulty){}
 
@@ -18,11 +19,20 @@ export class Board {
     this.array[x][y].bombCount = bombs;
   }
 
+  hasWon(){
+    return this.revealed === (this.array.length * this.array[0].length) - this.bombs.length;
+  }
+
   reveal(x: number, y: number) {
     this.array[x][y].status = 'revealed';
+    this.revealed += 1;
   }
 
   isRevealed(x: number, y: number) {
     return this.array[x][y].status === 'revealed';
+  }
+
+  toggleFlag(x: number, y: number) {
+    if(!this.isRevealed(x, y)) this.array[x][y].status = this.array[x][y].status === 'flagged' ? 'hidden' : 'flagged';
   }
 }

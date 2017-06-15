@@ -110,14 +110,16 @@ export class AppComponent implements OnInit {
       this.board.isNew = false;
   }
 
-  updateBoard(space: Space){
-    if(this.board.isNew) this.newBoard(space);
-    if(this.board.array[space.x][space.y].status !== 'flagged'){
-      if(space.isBomb){
-        this.gameOver();
-      } else {
-        this.reveal(space.x,space.y)
-        this.victory();
+  updateBoard(space: Space, event){
+    if(event.button === 0){
+      if(this.board.isNew) this.newBoard(space);
+      if(this.board.array[space.x][space.y].status !== 'flagged'){
+        if(space.isBomb){
+          this.gameOver();
+        } else {
+          this.reveal(space.x,space.y)
+          this.victory();
+        }
       }
     }
   }
@@ -131,16 +133,8 @@ export class AppComponent implements OnInit {
     this.didYouWin = 'GAME OVER'
   }
 
-  // TODO: check this out
   victory(){
-    let totalClicked = 0;
-    for(let x = 0; x < this.board.array.length; x++){
-      for(let y = 0; y < this.board.array[0].length; y++){
-        if(this.board.isRevealed(x,y)) totalClicked += 1;
-      }
-    }
-
-    if(totalClicked === ((this.difficulties[this.difficulty].x * this.difficulties[this.difficulty].y) - this.difficulties[this.difficulty].bombs)){
+    if(this.board.hasWon()){
       this.didYouWin = 'Victory is yours!'
     }
   }
@@ -172,12 +166,7 @@ export class AppComponent implements OnInit {
   }
 
 // TODO: make this better
-  flagThat(space: Space) {
-    if(this.board.array[space.x][space.y].status === 'flagged'){
-      this.board.array[space.x][space.y].status = 'hidden';
-    }
-    else if(this.board.array[space.x][space.y].status === 'hidden'){
-      this.board.array[space.x][space.y].status = 'flagged';
-    }
+  flag(space: Space) {
+    if(!this.board.isNew) this.board.toggleFlag(space.x, space.y);
   }
 }
