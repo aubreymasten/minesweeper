@@ -29,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let score of scores | async | score:difficulty.value; index as i">
+    <tr *ngFor="let score of scores | score:difficulty.value; index as i">
       <td>{{i+1}}</td>
       <td>{{score.name}}</td>
       <td>{{score.score}}</td>

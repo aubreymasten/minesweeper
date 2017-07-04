@@ -13,8 +13,6 @@ import { FirebaseListObservable } from 'angularfire2/database';
 })
 
 export class AppComponent implements OnInit {
-
-  constructor(private scoreService: ScoreService){}
   difficulties = [
     {
       name: 'Easy',
@@ -38,15 +36,18 @@ export class AppComponent implements OnInit {
       level: "2"
     }
   ];
-
   board: Board;
   difficulty: number = 0;
   didYouWin;
-  scores: FirebaseListObservable<any[]>;
   scoreSave: boolean = false;
+  scores = [];
+
+  constructor(private scoreService: ScoreService){}
 
   ngOnInit(){
-    this.scores = this.scoreService.getScores();
+    this.scoreService.getScores().subscribe(data => {
+      this.scores = data;
+    });
     this.genBoard();
   }
 
