@@ -1,50 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { Space } from './space.model';
-import { Board } from './board.model';
-import { Score } from './score.model';
-import { ScoreService } from './score.service';
+import { Space } from './models/space.model';
+import { Board } from './models/board.model';
+import { Score } from './models/score.model';
+import { ScoreService } from './services/score.service';
+import { DifficultyService } from './services/difficulty.service'
 import { FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ScoreService]
+  providers: [ScoreService, DifficultyService]
 })
 
 export class AppComponent implements OnInit {
-  difficulties = [
-    {
-      name: 'Easy',
-      x: 8,
-      y: 8,
-      bombs: 10,
-      level: "0"
-    },
-    {
-      name: 'Intermediate',
-      x: 16,
-      y: 16,
-      bombs: 40,
-      level: "1"
-    },
-    {
-      name: 'Extreme Sunburn',
-      x: 32,
-      y: 16,
-      bombs: 99,
-      level: "2"
-    }
-  ];
+  difficulties = [{title: "Easy", x: 10, y: 10, bombs: 0}];
   board: Board;
   difficulty: number = 0;
   didYouWin;
   scoreSave: boolean = false;
   scores = [];
 
-  constructor(private scoreService: ScoreService){}
+  constructor(private scoreService: ScoreService, private difficultyService: DifficultyService){}
 
   ngOnInit(){
+    this.difficultyService.getDifficulties().subscribe(data => {
+      this.difficulties = data;
+    })
     this.scoreService.getScores().subscribe(data => {
       this.scores = data;
     });
@@ -144,7 +126,7 @@ export class AppComponent implements OnInit {
   }
 
   saveScore(name: string){
-    let newScore: Score = new Score(name, this.board.score, this.board.difficulty.level);
+    let newScore: Score = new Score(name, this.board.score, this.board.difficulty.$key);
     this.scoreService.saveScore(newScore);
     this.scoreSave = false;
   }

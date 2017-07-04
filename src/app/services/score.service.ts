@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Score } from './score.model';
-import { SCORES } from './mock-scores';
+import { Score } from '../models/score.model';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 
