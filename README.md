@@ -1,6 +1,6 @@
 # Minesweeper
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+[For a live demo click here.](https://minesweeper-f11a1.firebaseapp.com/)
 
 ## Development server
 
